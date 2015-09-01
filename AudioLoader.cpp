@@ -1,6 +1,7 @@
 #include <dirent.h>
 #include <ostream>
 #include <iostream>
+#include <sstream>
 #include "AudioLoader.h"
 
 AudioLoader::AudioLoader(Player &player): player(player) {}
@@ -9,7 +10,9 @@ void AudioLoader::loadFromDirectory(std::string directory) {
 	DIR *handle;
 	handle = opendir(directory.c_str());
 	if(handle == NULL) {
-		throw "mhm";
+		std::ostringstream os;
+		os << "Could not open directory '" << directory << "': " << strerror(errno);
+		throw std::runtime_error(os.str());
 	}
 
 	struct dirent *item;

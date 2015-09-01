@@ -1,11 +1,14 @@
 #include <SDL.h>
 #include <ostream>
 #include <iostream>
+#include <sstream>
 #include "Player.h"
 
 Player::Player() {
 	if (SDL_Init(SDL_INIT_AUDIO) < 0) {
-		throw "Could not initialize SDL audio";
+		std::ostringstream os;
+		os << "Could not initialize SDL audio: " << SDL_GetError();
+		throw std::runtime_error(os.str());
 	}
 
 	SDL_AudioSpec want, have;
@@ -25,8 +28,12 @@ Player::~Player() {
 }
 
 void Player::add(std::string code, std::string path) {
-	std::cout << "<5>" << "Adding '" << code << "' from '" << path << "'\n";
-	letters.insert({code, Audio(code, path)});
+	try {
+		letters.insert({code, Audio(code, path)});
+		std::cout << "<5>" << "Adding '" << code << "' from '" << path << "'\n";
+	} catch(std::runtime_error &e) {
+		std::cout << "<3>" << e.what() << "\n";
+	}
 }
 
 Audio* Player::getLetter(std::string code) {

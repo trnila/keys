@@ -10,13 +10,17 @@ int main(int argc, char* argv[]) {
 		Player player;
 
 		AudioLoader loader(player);
-		loader.loadFromDirectory("voices/");
+		try {
+			loader.loadFromDirectory("voices/");
+		} catch(std::runtime_error &e) {
+			std::cout << "<3>" << e.what() << "\n";
+		}
 
 		player.play();
 
 		RawInput input(std::string("/dev/input/event4"));
 		input.listen(player);
-	} catch (const char *e) {
-		std::cout << e << std::endl;
+	} catch (std::exception &e) {
+		std::cout << "<0>" << e.what() << std::endl;
 	}
 }
