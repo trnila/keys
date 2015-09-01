@@ -26,14 +26,14 @@ void AudioLoader::loadFromDirectory(std::string directory) {
 		realpath(relative, absolute);
 
 		if(item->d_type != DT_REG) {
-			std::cout << "<6>" << "Skipping '" << absolute << "'\n";
+			std::cerr << "<6>" << "Skipping '" << absolute << "'\n";
 			continue;
 		}
 
 		char *end = strstr(item->d_name, ".wav");
 
 		if(!end) {
-			std::cout << "<6>" << "Could not add '" << absolute << "'\n";
+			std::cerr << "<6>" << "Could not add '" << absolute << "'\n";
 			continue;
 		}
 

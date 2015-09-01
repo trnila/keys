@@ -13,7 +13,7 @@ int main(int argc, char* argv[]) {
 		try {
 			loader.loadFromDirectory("voices/");
 		} catch(std::runtime_error &e) {
-			std::cout << "<3>" << e.what() << "\n";
+			std::cerr << "<3>" << e.what() << "\n";
 		}
 
 		player.play();
@@ -21,6 +21,6 @@ int main(int argc, char* argv[]) {
 		RawInput input(std::string("/dev/input/event4"));
 		input.listen(player);
 	} catch (std::exception &e) {
-		std::cout << "<0>" << e.what() << std::endl;
+		std::cerr << "<0>" << e.what() << std::endl;
 	}
 }

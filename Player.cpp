@@ -30,9 +30,9 @@ Player::~Player() {
 void Player::add(std::string code, std::string path) {
 	try {
 		letters.insert({code, Audio(code, path)});
-		std::cout << "<5>" << "Adding '" << code << "' from '" << path << "'\n";
+		std::cerr << "<5>" << "Adding '" << code << "' from '" << path << "'\n";
 	} catch(std::runtime_error &e) {
-		std::cout << "<3>" << e.what() << "\n";
+		std::cerr << "<3>" << e.what() << "\n";
 	}
 }
 
@@ -46,7 +46,7 @@ Audio* Player::getLetter(std::string code) {
 }
 
 void Player::addToPlaylist(std::string code) {
-	std::cout << "<5>Adding  " << code << " to queue\n";
+	std::cerr << "<5>Adding  " << code << " to queue\n";
 
 	mutex.lock();
 
@@ -54,7 +54,7 @@ void Player::addToPlaylist(std::string code) {
 	if(letter) {
 		queue.push(letter);
 	} else {
-		std::cout << "<4>Could not play '" << code << "'\n";
+		std::cerr << "<4>Could not play '" << code << "'\n";
 	}
 
 	mutex.unlock();
@@ -76,7 +76,7 @@ void Player::audioCallback(Uint8 *stream, size_t len) {
 			queue.pop();
 			track.setAudio(audio);
 
-			std::cout << "<5>Playing '" << audio->getCode() << "'\n";
+			std::cerr << "<5>Playing '" << audio->getCode() << "'\n";
 		}
 		mutex.unlock();
 	}
