@@ -6,7 +6,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 set(SOURCE_FILES
     main.cpp)
 
-add_executable(key ${SOURCE_FILES} Audio.cpp Audio.h Player.cpp Player.h AudioLoader.cpp AudioLoader.h Track.cpp Track.h)
+add_executable(key ${SOURCE_FILES} Audio.cpp Audio.h Player.cpp Player.h AudioLoader.cpp AudioLoader.h Track.cpp Track.h RawInput.cpp RawInput.h)
 
 INCLUDE(FindPkgConfig)
 PKG_SEARCH_MODULE(SDL2 REQUIRED sdl2)
