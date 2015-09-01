@@ -6,12 +6,15 @@
 
 class Letter {
 public:
-	Letter(std::string path);
+	Letter(std::string code, std::string path);
+	const std::string getCode();
 
 	void play();
 
 	Uint32 length; // length of our sample
 	Uint8 *buffer; // buffer cont
+private:
+	std::string code;
 };
 
 

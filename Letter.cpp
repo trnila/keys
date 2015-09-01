@@ -3,17 +3,19 @@
 #include <iostream>
 #include "Letter.h"
 
-SDL_AudioSpec a;
-Letter::Letter(std::string path) {
+Letter::Letter(std::string code, std::string path): code(code) {
+	SDL_AudioSpec a;
 	if(SDL_LoadWAV(path.c_str(), &a, &buffer, &length) == NULL) {
-
 		throw path.c_str();
 	}
 }
 
+const std::string Letter::getCode() {
+	return code;
+}
+
 void Letter::play() {
 	std::cout << "playing" << std::endl;
-
 
 	SDL_PauseAudio(0);
 
