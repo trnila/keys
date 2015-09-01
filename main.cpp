@@ -26,8 +26,12 @@ int main(int argc, char* argv[]) {
 		AudioLoader loader(player);
 		loader.loadFromDirectory("voices/");
 
-		player.play();
+//		player.addToPlaylist("0");
+//		player.addToPlaylist("1");
+//		player.addToPlaylist("2");
+//		player.addToPlaylist("3");
 
+		player.play();
 
 		struct epoll_event ee;
 		struct input_event ev;

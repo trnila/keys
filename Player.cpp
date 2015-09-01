@@ -8,8 +8,6 @@ Player::Player() {
 		throw "Could not initialize SDL audio";
 	}
 
-	audio_len = 0;
-
 	SDL_AudioSpec want, have;
 	SDL_zero(want);
 	want.freq = 22050;
@@ -22,12 +20,16 @@ Player::Player() {
 	audioDevice = SDL_OpenAudioDevice(NULL, 0, &want, &have, SDL_AUDIO_ALLOW_FORMAT_CHANGE);
 }
 
-void Player::add(std::string code, std::string path) {
-	std::cout << "<5>" << "Adding '" << code << "' from ;" << path << "'\n";
-	letters.insert({code, Letter(code, path)});
+Player::~Player() {
+	SDL_CloseAudioDevice(audioDevice);
 }
 
-Letter* Player::getLetter(std::string code) {
+void Player::add(std::string code, std::string path) {
+	std::cout << "<5>" << "Adding '" << code << "' from '" << path << "'\n";
+	letters.insert({code, Audio(code, path)});
+}
+
+Audio* Player::getLetter(std::string code) {
 	auto it = letters.find(code);
 	if(it == letters.end()) {
 		return NULL;
@@ -39,12 +41,16 @@ Letter* Player::getLetter(std::string code) {
 void Player::addToPlaylist(std::string code) {
 	std::cout << "<5>Adding  " << code << " to queue\n";
 
-	Letter *letter = getLetter(code);
+	mutex.lock();
+
+	Audio *letter = getLetter(code);
 	if(letter) {
 		queue.push(letter);
 	} else {
 		std::cout << "<4>Could not play '" << code << "'\n";
 	}
+
+	mutex.unlock();
 }
 
 void Player::play() {
@@ -55,25 +61,20 @@ void Player::audioCallbackProxy(void *userdata, Uint8 *stream, int len) {
 	((Player*)userdata)->audioCallback(stream, len);
 }
 
-void Player::audioCallback(Uint8 *stream, int len) {
-	if (audio_len == 0) {
+void Player::audioCallback(Uint8 *stream, size_t len) {
+	if(track.isFinished()) {
+		mutex.lock();
 		if(!queue.empty()) {
-			Letter *letter = queue.front();
-			audio_pos = letter->buffer;
-			audio_len = letter->length;
-
-			std::cout << "<6>Playing " << letter->getCode() << "\n";
-
+			Audio *audio = queue.front();
 			queue.pop();
-		} else {
-			return;
+			track.setAudio(audio);
+
+			std::cout << "<5>Playing '" << audio->getCode() << "'\n";
 		}
+		mutex.unlock();
 	}
 
-	len = ( len > audio_len ? audio_len : len );
-	SDL_memcpy (stream, audio_pos, len); 					// simply copy from one buffer into the other
-	//SDL_MixAudio(stream, audio_pos, len, SDL_MIX_MAXVOLUME);// mix from one buffer into another
-
-	audio_pos += len;
-	audio_len -= len;
+	if(!track.isFinished()) {
+		track.playNextSamples(stream, len);
+	}
 }

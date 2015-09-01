@@ -4,12 +4,13 @@
 #include <string>
 #include <SDL_stdinc.h>
 
-class Letter {
+class Audio {
 public:
-	Letter(std::string code, std::string path);
+	Audio(std::string code, std::string path);
 	const std::string getCode();
+	Uint32 getLength();
 
-	void play();
+	void play(Uint8 *stream, size_t offset, size_t len);
 
 	Uint32 length; // length of our sample
 	Uint8 *buffer; // buffer cont
