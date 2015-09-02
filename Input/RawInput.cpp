@@ -10,7 +10,7 @@ char const *keys[] = {"RESERVED", "ESC", "1", "2", "3", "4", "5", "6", "7", "8",
 
 RawInput::RawInput(std::string devicePath) {
 	fd = open(devicePath.c_str(), O_RDONLY | O_NOCTTY);
-	if(!fd) {
+	if(fd == -1) {
 		std::ostringstream os;
 		os << "Could not open device '" << devicePath << "': " << strerror(errno);
 		throw std::runtime_error(os.str());
@@ -21,7 +21,7 @@ RawInput::RawInput(std::string devicePath) {
 	int cfg = epoll_ctl(efd, EPOLL_CTL_ADD, fd, &ee);
 }
 
-void RawInput::listen(Player &player) {
+void RawInput::listen() {
 	struct input_event ev;
 
 	for(;;) {
@@ -29,7 +29,7 @@ void RawInput::listen(Player &player) {
 		read(fd, &ev, sizeof(ev));
 
 		if (ev.value == 1) {
-			player.addToPlaylist(keys[ev.code]);
+			notifyAll(keys[ev.code]);
 		}
 	}
 }

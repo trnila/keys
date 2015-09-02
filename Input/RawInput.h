@@ -3,12 +3,13 @@
 
 #include <string>
 #include <sys/epoll.h>
-#include "Player.h"
+#include "../Player.h"
+#include "Input.h"
 
-class RawInput {
+class RawInput: public Input {
 public:
 	RawInput(std::string devicePath);
-	void listen(Player &player);
+	void listen();
 private:
 	int fd, efd;
 	struct epoll_event ee;
