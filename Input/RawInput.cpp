@@ -29,7 +29,11 @@ void RawInput::listen() {
 		read(fd, &ev, sizeof(ev));
 
 		if (ev.value == 1) {
-			notifyAll(keys[ev.code]);
+			if(ev.code > sizeof(keys) / sizeof(keys[0])) {
+				std::cerr << "<4>Unknown key code: " << ev.code << "\n";
+			} else {
+				notifyAll(keys[ev.code]);
+			}
 		}
 	}
 }
